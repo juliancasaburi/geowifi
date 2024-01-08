@@ -958,18 +958,30 @@ elif search_by == 'ssid':
 print_results_table(search_results)
 
 # Save the search results in the specified output format
+# Get the absolute path to the directory containing the script
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
+# Create the output directory if it doesn't exist
+output_dir = os.path.join(script_dir, 'results')
+os.makedirs(output_dir, exist_ok=True)
+
+# Construct the absolute path to the output file
+output_file_path = os.path.join(output_dir, str(args.identifier).replace(':', '_') + '.json')
+
+# Open the file for writing
 if output_format == 'map':
     # Create a map with markers for the search results
     map = create_map(search_results)
     # Save the map to an HTML file
-    map.save('results/' + str(args.identifier).replace(':', '_') + '.html')
+    map.save(output_file_path + str(args.identifier).replace(':', '_') + '.html')
     filepath = os.getcwd()
     console.print(' [:green_circle:] [bright_yellow]Map saved at[/bright_yellow]: [bright_blue]' + str(
         filepath) + '\\results\\' + str(args.identifier).replace(':', '_') + '.html[/bright_blue]')
     print()
 elif output_format == 'json':
     # Save the search results to a JSON file
-    with open('results/' + str(args.identifier).replace(':', '_') + '.json', 'w') as outfile:
+    output_dir = os.path.join(script_dir, 'results')
+    with open(output_file_path + str(args.identifier).replace(':', '_') + '.json', 'w') as outfile:
         json.dump(search_results, outfile)
     filepath = os.getcwd()
     console.print(' [:green_circle:] [bright_yellow]Json file saved at[/bright_yellow]: [bright_blue]' + str(
